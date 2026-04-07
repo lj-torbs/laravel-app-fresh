@@ -63,7 +63,7 @@
                                 type="submit"
                                 class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 active:scale-95 transition-all px-8 py-3 rounded-xl text-sm font-bold text-white shadow-lg shadow-indigo-500/20"
                             >
-                                Save Post
+                                Update Post
                             </button>
                         </div>
                     </form>
