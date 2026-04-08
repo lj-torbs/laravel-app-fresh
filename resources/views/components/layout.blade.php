@@ -11,12 +11,12 @@
 </head> 
 <style>
     body{
-        background-color: #1c3056;
+        background-color: #17777c;
         color: white;
         font-family: Arial, sans-serif;
     }
     nav{
-        background-color:rgb(252, 248, 242);
+        background-color:rgba(215, 211, 208, 0.36);
         padding: 10px;
         color:#000000;
         font-weight: bold;
@@ -26,13 +26,14 @@
     }
     </style>
 <body>
-    <nav class="flex items-center justify-center gap-2 shadow-md">
-    <a href="/" class="hover:bg-gray-200 transition-colors duration-200">Home</a>
-    <a href="/about" class="hover:bg-gray-200 transition-colors duration-200">About</a>
-    <a href="/contact" class="hover:bg-gray-200 transition-colors duration-200">Contact</a>
-    <a href="/posts" class="hover:bg-gray-200 transition-colors duration-200">Posts</a>
-    <a href="/register" class="hover:bg-gray-200 transition-colors duration-200">User Registration</a>
-</nav>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/formtest">Form Test</a>
+        <a href="/posts">Posts</a>
+        <a href="/user-registration">Register</a>
+    </nav>
 {{ $slot }}
 
 </body>

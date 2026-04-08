@@ -3,8 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use App\Models\Ideas;
-use App\Models\User;
 use App\Models\Post;
+use Illuminate\Http\Request;
+use App\Models\User;
+
 
 Route::view('/', 'welcome', [
     'greeting' => 'Hello, World!',
@@ -19,6 +21,35 @@ Route::view('/', 'welcome', [
 
 Route::view('/about', 'about');
 Route::view('/contact', 'contact');
+
+Route::get('/formtest', function(){
+    $posts = Post::all();
+
+    return view('formtest',[
+        'posts' => $posts,
+    ]);
+});
+
+Route::post('/formtest', function(){
+    Post::create([
+        'description' => request('description'),
+    ]);
+
+    return redirect('/formtest');
+});
+
+Route::delete('/formtest/{id}', function ($id) {
+    Post::findOrFail($id)->delete();
+
+    return redirect('/formtest');
+});
+
+Route::get('/delete', function(){
+    Post::truncate();  
+
+    return redirect('/formtest');
+});
+
 
 //index
 Route::get('/posts', function(){
@@ -56,67 +87,63 @@ Route::patch('/posts/{post}', function (Post $post) {
 );
 
 
+Route::get('/user-registration', function () {
+     $users = User::all(); 
+    return view('user-registration', compact('users'));
 
-
-
-
-//user registration routes
-
-Route::get('/register', function () {
-    $users = User::all(); 
-    return view('user_registration.index', [
-        'users' => $users
-    ]);
 });
 
-Route::get('/register/create', function () {
-    return view('user_registration.create');
-});
-
-Route::post('/register', function(User $user){
-    $user->create([
-        'first_name' => request('first_name'),
-        'last_name' => request('last_name'),
-        'middle_name' => request('middle_name'),
-        'nickname' => request('nickname'),
-        'age' => request('age'),
-        'address' => request('address'),
-        'contact_number' => request('contact_number'),
-        'email' => request('email'),
-        'password' => request('password'),
+Route::post('/user-registration', function (Request $request) {
+    $validated = $request->validate([
+        'first-name'     => 'required',
+        'last-name'      => 'required',
+        'middle-name'    => 'nullable',
+        'nickname'       => 'nullable',
+        'email'          => 'required|email|unique:users,email', 
+        'age'            => 'required',
+        'address'        => 'required',
+        'contact-number' => 'required'
     ]);
 
-    return redirect('/register');
-}
-);
-
-Route::get('/register/show/{user}', function(User $user){
-    return view('user_registration.show', [
-        'user' => $user,
-    ]);
-}
-);
-
-Route::patch('/register/update/{user}', function(User $user){
-    $user->update([
-        'first_name' => request('first_name'),
-        'last_name' => request('last_name'),
-        'middle_name' => request('middle_name'),
-        'nickname' => request('nickname'),
-        'age' => request('age'),
-        'address' => request('address'),
-        'contact_number' => request('contact_number'),
-        'email' => request('email'),
-        'password' => request('password'),
+    User::create([
+        'first-name'     => $validated['first-name'], 
+        'last-name'      => $validated['last-name'],
+        'middle-name'    => $validated['middle-name'],
+        'nickname'       => $validated['nickname'],
+        'email'          => $validated['email'],
+        'age'            => $validated['age'],
+        'address'        => $validated['address'],
+        'contact-number' => $validated['contact-number']
     ]);
 
-    return redirect('/register');
-}
-);
+    return redirect('user-registration') ;
+    });
 
-Route::delete('/register/delete/{user}', function (User $user) {
+Route::delete('/user-registration/{id}', function ($id) {
+    $user = User::findOrFail($id);
     $user->delete();
 
-    return redirect('/register');
+    return redirect('/user-registration')->with('success', 'User deleted!');
+});
+
+Route::get('/user-registration/{id}/edit', function ($id) {
+    $user = User::findOrFail($id);
+    return view('user-edit', compact('user'));
+});
+
+Route::PATCH('/user-registration/{id}', function (Illuminate\Http\Request $request, $id) {
+    $user = User::findOrFail($id);
     
+    $user->update([
+        'first-name'     => $request->input('first-name'),
+        'last-name'      => $request->input('last-name'),
+        'middle-name'    => $request->input('middle-name'),
+        'nickname'       => $request->input('nickname'),
+        'email'          => $request->input('email'),
+        'age'            => $request->input('age'),
+        'address'        => $request->input('address'),
+        'contact-number' => $request->input('contact-number'),
+    ]);
+
+    return redirect('/user-registration')->with('success', 'Profile updated!');
 });
