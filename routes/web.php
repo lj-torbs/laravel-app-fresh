@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Models\User; 
 use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BookController;
 
 Route::view('/', 'welcome', [
     'greeting' => 'Hello, World!',
@@ -106,5 +107,18 @@ Route::patch('/posts/{post}', function (Post $post) {
         'description' => request('description'),
         'updated_at' => now(),
     ]);
-    return redirect('/posts/' . $post->id);
+
+     return redirect('/posts/' . $post->id);
+});
+
+Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
+
+Route::get('/books', [BookController::class, 'index'])->name('books.index');
+
+Route::post('/books', [BookController::class, 'store'])->name('books.store');
+
+Route::resource('books', BookController::class);
+
+    Route::get('/test-route', function() {
+    return "The routes file is working!";
 });

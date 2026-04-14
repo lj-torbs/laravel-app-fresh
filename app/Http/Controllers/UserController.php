@@ -47,8 +47,9 @@ class UserController extends Controller
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name'  => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
             'nickname'   => 'nullable|string|max:255',
-            // CRITICAL: unique rule ignores the current user ID
+          
             'email'      => 'required|email|unique:users,email,' . $id,
             'age'        => 'required|numeric|min:1',
             'contact_number' => 'required',
